@@ -1,6 +1,6 @@
 Sau khi tải dự án 
 1) npm install
-vào MySQL tạo bảng để có user đăng nhập
+vào SQLSever tạo bảng để có user để đăng nhập
 CREATE TABLE Users (
     UserID INT IDENTITY(1,1) PRIMARY KEY,
     Username NVARCHAR(50) UNIQUE NOT NULL,
