@@ -1,0 +1,133 @@
+.profile-container {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background: #0f172a;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 40px;
+  color: white;
+  z-index: 10;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.avatar-large {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #818cf8, #c084fc);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 auto 15px;
+}
+
+.badge-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  background: rgba(129, 140, 248, 0.2);
+  color: #818cf8;
+}
+
+.badge-role.admin { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.info-item label {
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 30px 0;
+}
+
+.password-form h4 {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.password-form input {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.btn-save {
+  width: 100%;
+  padding: 12px;
+  background: #6366f1;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-logout {
+  width: 100%;
+  margin-top: 30px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #f87171;
+  color: #f87171;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: 0.3s;
+}
+
+.btn-logout:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.alert {
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+.alert.success { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+.alert.error { background: rgba(248, 113, 113, 0.2); color: #f87171; }

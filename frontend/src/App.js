@@ -1,22 +1,49 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
-import Employees from "./pages/Employees";
-import EmployeeAdd from "./pages/EmployeeAdd";
-import EmployeeEdit from "./pages/EmployeeEdit";
-export default App;
+import EmployeeDetail from "./pages/EmployeeDetail";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Overview from "./pages/Overview";
+import Employee from "./pages/Employee";
+import EmployeeForm from "./pages/EmployeeForm";
+import Attendance from "./pages/Attendance";
+import Payroll from "./pages/Payroll";
+import Reports from "./pages/Reports";
+import Alerts from "./pages/Alerts";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Employees />} />
-          <Route path="/employees/add" element={<EmployeeAdd />} />
-          <Route path="/employees/:id" element={<EmployeeEdit />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Overview />} />
+          <Route path="overview" element={<Overview />} />
+
+          <Route path="employee" element={<Employee />} />
+          <Route path="employee/add" element={<EmployeeForm />} />
+          <Route path="employee/edit/:id" element={<EmployeeForm />} />
+          <Route path="employee/:id" element={<EmployeeDetail />} />
+          <Route path="attendance" element={<Attendance />} />
+          <Route path="payroll" element={<Payroll />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="alerts" element={<Alerts />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
+export default App;

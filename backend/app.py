@@ -1,15 +1,15 @@
-from flask import Flask, render_template
-from router import router               
-from flask_cors import CORS
+from flask import Flask
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS  
+from routes import register_routes
 
 app = Flask(__name__)
-CORS(app)
-app.register_blueprint(router)          
 
+app.config["JWT_SECRET_KEY"] = "your-secret-key"
+
+CORS(app, supports_credentials=True)
+jwt = JWTManager(app)
+register_routes(app)
 
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=True
-    )
+    app.run(debug=True)

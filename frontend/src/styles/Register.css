@@ -1,0 +1,122 @@
+/* Tận dụng lại các biến và hiệu ứng từ Login */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Các khối cầu nền tương tự Login để tạo sự đồng bộ */
+.background-shape {
+  position: absolute;
+  filter: blur(80px);
+  z-index: 1;
+  border-radius: 50%;
+}
+.shape-1 { width: 300px; height: 300px; background: #4f46e5; top: -50px; right: 10%; animation: float 8s infinite; }
+.shape-2 { width: 400px; height: 400px; background: #7c3aed; bottom: -100px; left: 5%; animation: float 10s infinite reverse; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, 40px); }
+}
+
+/* Glass Card */
+.register-card {
+  width: 90%;
+  max-width: 450px;
+  padding: 40px;
+  border-radius: 24px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: white;
+  animation: slideUp 0.6s ease-out;
+}
+
+.card-header { text-align: center; margin-bottom: 30px; }
+.card-header h3 { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+.card-header p { color: rgba(255, 255, 255, 0.6); font-size: 14px; }
+
+.input-group { margin-bottom: 15px; }
+.input-group label { display: block; font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+
+.register-card input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 12px 15px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.register-card input:focus {
+  outline: none;
+  border-color: #818cf8;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.register-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: 0.3s;
+}
+
+.register-btn:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+}
+
+.register-error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.register-success {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.register-footer { text-align: center; margin-top: 25px; font-size: 14px; }
+.register-footer a { color: #818cf8; text-decoration: none; font-weight: 600; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Spinner */
+.loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: rotation 1s linear infinite;
+}
+@keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

@@ -1,16 +1,20 @@
-import Header from "./Header";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import Header from "./Header";
 
-export default function Layout({ children }) {
-return (
-  <div>
-    <Header />
-    <div style={{ display: "flex" }}>
+export default function Layout() {
+  return (
+    <div className="d-flex">
+
       <Sidebar />
-      <main style={{ flexGrow: 1 }} className="p-4">
-        {children}
-      </main>
+      <div className="flex-grow-1">
+        <Header />
+
+        <div className="p-4">
+          <Outlet />   
+        </div>
+      </div>
+
     </div>
-  </div>
-);
+  );
 }

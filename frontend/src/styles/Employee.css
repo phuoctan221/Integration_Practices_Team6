@@ -1,0 +1,85 @@
+/* ===== DETAIL WRAPPER ===== */
+.employee-detail-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+/* ===== DETAIL CARD ===== */
+.employee-detail-card {
+  width: 100%;
+  max-width: 700px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== HEADER ===== */
+.detail-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.detail-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a73e8, #4dabf7);
+  color: white;
+  font-size: 36px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+}
+
+.detail-header h3 {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* ===== INFO GRID ===== */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.detail-item {
+  background: #f8f9fc;
+  padding: 15px 20px;
+  border-radius: 12px;
+}
+
+.detail-item label {
+  font-size: 13px;
+  color: #6c757d;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.detail-item p {
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ===== STATUS BADGE ===== */
+.detail-status {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.detail-active {
+  background: #d4edda;
+  color: #28a745;
+}
+
+.detail-inactive {
+  background: #f8d7da;
+  color: #dc3545;
+}

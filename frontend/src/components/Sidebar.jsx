@@ -1,26 +1,55 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import "../styles/Sidebar.css";
 
 export default function Sidebar() {
+
+  const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
+
+  const menu = [
+    { name: "Dashboard", path: "/overview", icon: "" },
+    { name: "Employee", path: "/employee", icon: "" },
+    { name: "Payroll", path: "/payroll", icon: "" },
+    { name: "Attendance", path: "/attendance", icon: "" },
+    { name: "Reports", path: "/reports", icon: "" },
+    { name: "Alerts", path: "/alerts", icon: "" },
+    { name: "Profile", path: "/profile", icon: "" }
+  ];
+
   return (
-    <div
-      className="bg-light border-end"
-      style={{ width: "220px", height: "100vh" }}
-    >
-      <div className="list-group list-group-flush">
+    <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
 
-        <Link to="/" className="list-group-item list-group-item-action">
-          {" "}
-          Employees
-        </Link>
+      <div className="sidebar-header">
+        <span className="logo">
+          {collapsed ? "" : ""}
+        </span>
 
-        <Link
-          to="/employees/add"
-          className="list-group-item list-group-item-action"
+        <button
+          className="collapse-btn"
+          onClick={() => setCollapsed(!collapsed)}
         >
-          {" "}
-          Add Employee
-        </Link>
+          ☰
+        </button>
       </div>
+
+      <div className="menu">
+
+        {menu.map((item, index) => (
+          <Link
+            key={index}
+            to={item.path}
+            className={`menu-item ${
+              location.pathname === item.path ? "active" : ""
+            }`}
+          >
+            <span className="icon">{item.icon}</span>
+            {!collapsed && <span>{item.name}</span>}
+          </Link>
+        ))}
+
+      </div>
+
     </div>
   );
 }
