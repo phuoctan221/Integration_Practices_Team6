@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import Skeleton from "react-loading-skeleton";
 import "chart.js/auto";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -15,14 +15,13 @@ export default function Payroll() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // ================= LOAD DATA =================
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     axios
       .get("http://localhost:5000/api/payroll", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
         const sorted = res.data.sort((a, b) =>
@@ -38,11 +37,18 @@ export default function Payroll() {
       .finally(() => setLoading(false));
   }, []);
 
+  const months = [...new Set(payroll.map(p => p.SalaryMonth))];
+  const departments = [...new Set(payroll.map(p => p.Department))];
+
+  // ================= FILTER =================
   useEffect(() => {
     let result = [...payroll];
 
-    if (monthFilter) {
-      result = result.filter(p => p.SalaryMonth === monthFilter);
+    // ✅ Nếu chưa chọn tháng thì lấy tháng mới nhất
+    const selectedMonth = monthFilter || months[0];
+
+    if (selectedMonth) {
+      result = result.filter(p => p.SalaryMonth === selectedMonth);
     }
 
     if (employeeFilter) {
@@ -58,39 +64,37 @@ export default function Payroll() {
     setFiltered(result);
   }, [monthFilter, employeeFilter, departmentFilter, payroll]);
 
+  // ================= TOTAL PAYROLL =================
   const totalPayroll = useMemo(() => {
     return filtered.reduce((sum, p) => sum + (p.NetSalary || 0), 0);
   }, [filtered]);
 
+  // ================= CHART DATA (NO DUPLICATE) =================
   const chartData = useMemo(() => {
-    const grouped = {};
+    const employeeMap = new Map();
 
+    // ✅ Ghi đè theo tên nhân viên (đảm bảo 1 người = 1 dòng)
     filtered.forEach(p => {
-      const name = p.FullName || "Unknown";
-      grouped[name] = (grouped[name] || 0) + (p.NetSalary || 0);
+      employeeMap.set(p.FullName, p.NetSalary || 0);
     });
 
+    const labels = Array.from(employeeMap.keys());
+    const data = Array.from(employeeMap.values());
+
     return {
-      labels: Object.keys(grouped),
+      labels,
       datasets: [
         {
-          label: "Total Net Salary (đ)",
-          data: Object.values(grouped),
-          borderColor: "#6f42c1",
-          backgroundColor: "rgba(111,66,193,0.2)",
-          tension: 0.4,
-          fill: true
+          label: "Net Salary (đ)",
+          data,
+          backgroundColor: "#6f42c1",
+          borderRadius: 6
         }
       ]
     };
   }, [filtered]);
 
-  const departments = [...new Set(payroll.map(p => p.Department))];
-  const months = [...new Set(payroll.map(p => p.SalaryMonth))];
-
-  // ===============================
-  // LOADING
-  // ===============================
+  // ================= LOADING =================
   if (loading) {
     return (
       <div className="p-4">
@@ -111,6 +115,7 @@ export default function Payroll() {
     <div className="container-fluid p-4">
       <h4 className="mb-4 fw-bold">Payroll Management</h4>
 
+      {/* FILTER */}
       <div className="row g-3 mb-4">
         <div className="col-md-3">
           <select
@@ -118,7 +123,7 @@ export default function Payroll() {
             value={monthFilter}
             onChange={(e) => setMonthFilter(e.target.value)}
           >
-            <option value="">-- Filter by Month --</option>
+            <option value="">-- Latest Month --</option>
             {months.map((m, i) => (
               <option key={i} value={m}>{m}</option>
             ))}
@@ -148,13 +153,15 @@ export default function Payroll() {
         </div>
       </div>
 
+      {/* TOTAL CARD */}
       <div className="card shadow-sm p-4 mb-4 border-0 bg-light">
-        <h6 className="text-muted">Total Payroll</h6>
+        <h6 className="text-muted">Total Payroll (Selected Month)</h6>
         <h2 className="fw-bold text-success">
           {totalPayroll.toLocaleString("vi-VN")} đ
         </h2>
       </div>
 
+      {/* TABLE */}
       <div className="card shadow-sm mb-4 border-0">
         <div className="card-body table-responsive p-0">
           <table className="table table-hover align-middle mb-0">
@@ -194,16 +201,35 @@ export default function Payroll() {
         </div>
       </div>
 
-      {/* CHART SECTION */}
+      {/* BAR CHART */}
       <div className="card shadow-sm p-4 border-0">
-        <h6 className="mb-3 fw-bold">Salary Overview</h6>
+        <h6 className="mb-3 fw-bold">
+          Net Salary Comparison (By Employee)
+        </h6>
         <div style={{ height: "350px" }}>
-          <Line
+          <Bar
             data={chartData}
             options={{
               maintainAspectRatio: false,
               plugins: {
-                legend: { position: "top" }
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      return context.raw.toLocaleString("vi-VN") + " đ";
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function(value) {
+                      return value.toLocaleString("vi-VN");
+                    }
+                  }
+                }
               }
             }}
           />

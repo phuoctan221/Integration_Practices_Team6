@@ -1,8 +1,8 @@
 from werkzeug.security import generate_password_hash
 from config import get_sqlserver_connection
 
-username = "admin1"
-password = "111111"
+username = "admin123"
+password = "1234567"
 role = "Admin"
 
 hashed_password = generate_password_hash(password)

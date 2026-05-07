@@ -5,6 +5,7 @@ export default function Attendance() {
   const [data, setData] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [monthFilter, setMonthFilter] = useState("");
+  const [yearFilter, setYearFilter] = useState("");
   const [employeeFilter, setEmployeeFilter] = useState("");
   const [error, setError] = useState(null);
 
@@ -28,8 +29,17 @@ export default function Attendance() {
   useEffect(() => {
     let result = [...data];
 
+    if (yearFilter) {
+      result = result.filter((a) =>
+        a.Month?.startsWith(yearFilter)
+      );
+    }
+
     if (monthFilter) {
-      result = result.filter((a) => a.Month === monthFilter);
+      result = result.filter((a) => {
+        const month = a.Month?.split("-")[1];
+        return month === monthFilter;
+      });
     }
 
     if (employeeFilter) {
@@ -41,7 +51,7 @@ export default function Attendance() {
     }
 
     setFiltered(result);
-  }, [monthFilter, employeeFilter, data]);
+  }, [monthFilter, yearFilter, employeeFilter, data]);
 
   // ================= SUMMARY =================
   const totalWork = filtered.reduce(
@@ -57,18 +67,44 @@ export default function Attendance() {
     0
   );
 
-  const months = [...new Set(data.map((a) => a.Month))];
+  // Lấy danh sách năm duy nhất
+  const years = [
+    ...new Set(data.map((a) => a.Month?.split("-")[0])),
+  ];
 
   if (error)
     return <div className="p-4 text-danger">{error}</div>;
 
   return (
     <div className="container-fluid">
-      <h4 className="mb-4 fw-bold">Attendance Management</h4>
+      <h4 className="mb-4 fw-bold">
+        Attendance Management
+      </h4>
 
       {/* FILTER */}
       <div className="row g-3 mb-4">
-        <div className="col-md-3">
+        {/* YEAR FILTER */}
+        <div className="col-md-2">
+          <select
+            className="form-select"
+            value={yearFilter}
+            onChange={(e) =>
+              setYearFilter(e.target.value)
+            }
+          >
+            <option value="">
+              -- Filter by Year --
+            </option>
+            {years.map((y, i) => (
+              <option key={i} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* MONTH FILTER */}
+        <div className="col-md-2">
           <select
             className="form-select"
             value={monthFilter}
@@ -76,15 +112,24 @@ export default function Attendance() {
               setMonthFilter(e.target.value)
             }
           >
-            <option value="">-- Filter by Month --</option>
-            {months.map((m, i) => (
-              <option key={i} value={m}>
-                {m}
-              </option>
-            ))}
+            <option value="">
+              -- Filter by Month --
+            </option>
+            {[...Array(12)].map((_, i) => {
+              const month = String(i + 1).padStart(
+                2,
+                "0"
+              );
+              return (
+                <option key={month} value={month}>
+                  Month {i + 1}
+                </option>
+              );
+            })}
           </select>
         </div>
 
+        {/* EMPLOYEE FILTER */}
         <div className="col-md-3">
           <input
             className="form-control"

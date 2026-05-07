@@ -89,9 +89,6 @@ export default function Login() {
         </form>
 
         <div className="login-footer">
-          <p>
-            Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
-          </p>
           <div className="demo-info">
             Demo: <span>admin / 123456</span>
           </div>

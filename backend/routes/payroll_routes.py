@@ -4,9 +4,6 @@ from config import get_sqlserver_connection, get_mysql_connection
 
 payroll_bp = Blueprint("payroll_bp", __name__)
 
-# ============================================================
-# API: LẤY DANH SÁCH LƯƠNG (PAYROLL)
-# ============================================================
 @payroll_bp.route("/api/payroll")
 @jwt_required()
 def get_payroll():
@@ -23,10 +20,33 @@ def get_payroll():
         my_cur = my.cursor(dictionary=True)
         sql_cur = sql.cursor()
 
-        # Lấy tất cả lương từ MySQL
+        # ========================
+        # 1️⃣ LẤY TOÀN BỘ NHÂN VIÊN TRƯỚC
+        # ========================
+        sql_cur.execute("""
+            SELECT e.EmployeeID, e.FullName, 
+                   ISNULL(d.DepartmentName, 'N/A') as Department
+            FROM Employees e
+            LEFT JOIN Departments d ON e.DepartmentID = d.DepartmentID
+        """)
+
+        employees = sql_cur.fetchall()
+
+        # Tạo dictionary để lookup nhanh
+        employee_map = {
+            emp[0]: {
+                "FullName": emp[1],
+                "Department": emp[2]
+            }
+            for emp in employees
+        }
+
+        # ========================
+        # 2️⃣ LẤY SALARY
+        # ========================
         my_cur.execute("""
             SELECT 
-                SalaryMonth,
+                DATE_FORMAT(SalaryMonth, '%Y-%m') as SalaryMonth,
                 EmployeeID,
                 BaseSalary,
                 Bonus,
@@ -40,21 +60,13 @@ def get_payroll():
         results = []
 
         for s in salary_rows:
-            # Lấy thông tin nhân viên từ SQL Server
-            sql_cur.execute("""
-                SELECT e.FullName, ISNULL(d.DepartmentName, 'N/A')
-                FROM Employees e
-                LEFT JOIN Departments d ON e.DepartmentID = d.DepartmentID
-                WHERE e.EmployeeID = ?
-            """, (s["EmployeeID"],))
-
-            emp = sql_cur.fetchone()
+            emp = employee_map.get(s["EmployeeID"], None)
 
             results.append({
-                "SalaryMonth": str(s["SalaryMonth"]),
+                "SalaryMonth": s["SalaryMonth"],
                 "EmployeeID": s["EmployeeID"],
-                "FullName": emp[0] if emp else "Nhân viên đã xoá",
-                "Department": emp[1] if emp else "N/A",
+                "FullName": emp["FullName"] if emp else "Deleted Employee",
+                "Department": emp["Department"] if emp else "N/A",
                 "BaseSalary": float(s["BaseSalary"] or 0),
                 "Bonus": float(s["Bonus"] or 0),
                 "Deductions": float(s["Deductions"] or 0),

@@ -27,6 +27,16 @@ export default function Reports() {
   if (!data)
     return <div className="p-4">Loading reports...</div>;
 
+  // ================= STATUS COLOR MAP =================
+  const statusColors = {
+    Active: "#20c997",      // Green
+    Inactive: "#dc3545",    // Red
+    Probation: "#ffc107",   // Yellow
+    Intern: "#0d6efd",      // Blue
+    "On Leave": "#6f42c1",  // Purple
+  };
+
+  // ================= DEPARTMENT CHART =================
   const deptChart = {
     labels: data.departmentReport.map((d) => d.Department),
     datasets: [
@@ -39,17 +49,23 @@ export default function Reports() {
           "#ffc107",
           "#dc3545",
           "#0d6efd",
+          "#6610f2",
+          "#fd7e14",
         ],
       },
     ],
   };
 
+  // ================= STATUS CHART =================
   const statusChart = {
     labels: data.statusReport.map((s) => s.Status),
     datasets: [
       {
         data: data.statusReport.map((s) => s.Total),
-        backgroundColor: ["#20c997", "#dc3545"],
+        backgroundColor: data.statusReport.map(
+          (s) => statusColors[s.Status] || "#adb5bd" // fallback grey
+        ),
+        borderWidth: 0,
       },
     ],
   };
@@ -84,6 +100,7 @@ export default function Reports() {
 
       {/* ================= CHART SECTION ================= */}
       <div className="row g-4">
+        {/* Department Chart */}
         <div className="col-lg-6">
           <div className="card shadow-sm h-100 p-4">
             <h6 className="mb-3">
@@ -93,12 +110,26 @@ export default function Reports() {
           </div>
         </div>
 
+        {/* Status Chart */}
         <div className="col-lg-6">
           <div className="card shadow-sm h-100 p-4">
             <h6 className="mb-3">
               Employee Status
             </h6>
-            <Pie data={statusChart} />
+            <Pie
+              data={statusChart}
+              options={{
+                plugins: {
+                  legend: {
+                    position: "bottom",
+                    labels: {
+                      padding: 20,
+                      usePointStyle: true,
+                    },
+                  },
+                },
+              }}
+            />
           </div>
         </div>
       </div>
@@ -114,7 +145,7 @@ export default function Reports() {
             <thead className="table-light">
               <tr>
                 <th>#</th>
-                <th>Employee ID</th>
+                <th>Employee Name</th>
                 <th>Total Absent Days</th>
               </tr>
             </thead>
@@ -122,7 +153,7 @@ export default function Reports() {
               {data.topAbsent.map((t, i) => (
                 <tr key={i}>
                   <td>{i + 1}</td>
-                  <td>{t.EmployeeID}</td>
+                  <td>{t.FullName}</td>
                   <td>
                     <span className="badge bg-danger">
                       {t.total_absent} days

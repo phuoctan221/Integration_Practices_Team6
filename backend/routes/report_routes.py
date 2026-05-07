@@ -63,6 +63,7 @@ def get_reports():
         if row["total_days"] and row["total_days"] > 0:
             absence_rate = (row["total_absent"] / row["total_days"]) * 100
 
+        # ================= TOP ABSENT (ĐÃ THÊM FULLNAME) =================
         my_cur.execute("""
             SELECT EmployeeID, COALESCE(SUM(AbsentDays), 0) as total_absent
             FROM attendance
@@ -70,10 +71,23 @@ def get_reports():
             ORDER BY total_absent DESC
             LIMIT 5
         """)
-        top_absent = [
-            {"EmployeeID": r["EmployeeID"], "total_absent": int(r["total_absent"])}
-            for r in my_cur.fetchall()
-        ]
+
+        top_absent = []
+        for r in my_cur.fetchall():
+
+            # Lấy tên nhân viên từ SQL Server
+            sql_cur.execute(
+                "SELECT FullName FROM Employees WHERE EmployeeID = ?",
+                (r["EmployeeID"],)
+            )
+            emp = sql_cur.fetchone()
+            name = emp[0] if emp else "Nhân viên đã xoá"
+
+            top_absent.append({
+                "EmployeeID": r["EmployeeID"],
+                "FullName": name,  # ✅ Thêm tên
+                "total_absent": int(r["total_absent"])
+            })
 
         return jsonify({
             "totalEmployees": total_employees,

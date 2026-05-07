@@ -40,7 +40,9 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="alerts" element={<Alerts />} />
           <Route path="/profile" element={<Profile />} />
+          
         </Route>
+        
       </Routes>
     </Router>
   );
